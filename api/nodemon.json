@@ -1,0 +1,9 @@
+{
+  "watch": ["src"],
+  "ext": "js",
+  "exec": "node src/index.js",
+  "env": {
+    "PORT": "3000",
+    "NODE_ENV": "development"
+  }
+}
