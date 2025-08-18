@@ -9,8 +9,8 @@ dotenv.config();
 const POLL_INTERVAL = process.env.POLL_INTERVAL || 5000
 connectToDataBase(process.env.MONGO_URI)
 const connection = {
-    host: '127.0.0.1',
-    port: 6379,
+    host: process.env.HOST || '127.0.0.1',
+    port: process.env.PORT || 6379,
     maxRetriesPerRequest: null,
 };
 

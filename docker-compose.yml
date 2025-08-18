@@ -10,6 +10,17 @@ services:
       - "4000:4000"
     environment:
       - REDIS_URL=redis://redis:6379/0
+      
+  worker:
+    build: ./worker
+    env_file: ./worker/.env
+    depends_on:
+      - redis
+      - mongo
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - MONGO_URI=mongodb://mongo:27017/droplater
+
   mongo:
     image: mongo:6
     container_name: mongo
