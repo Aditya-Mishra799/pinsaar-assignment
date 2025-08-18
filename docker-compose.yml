@@ -1,6 +1,15 @@
 version: "3.8"
 
 services:
+  sink:
+    build: ./sink
+    env_file: ./sink/.env
+    depends_on:
+      - redis
+    ports:
+      - "4000:4000"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
   mongo:
     image: mongo:6
     container_name: mongo
