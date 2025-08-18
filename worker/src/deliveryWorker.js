@@ -7,7 +7,6 @@ const getIdempotencyKey = (noteId, time) => {
 }
 
 export const deliverNotes = async (job) => {
-    console.log("Got Job", job)
     const note = await Note.findById(job.data.noteId)
     if (!note || !(note.status === "pending")) return;
     try {
@@ -27,17 +26,18 @@ export const deliverNotes = async (job) => {
             ok: res.status === 200,
             error: res.status === 200 ? null : `${res.status} response`
         })
-        await note.save()
-        note.status = "delivered";
-        note.deliveredAt = new Date();
+        if (res.data.duplicate === false) {
+            note.status = "delivered";
+            note.deliveredAt = new Date();
+        }
         await note.save()
     } catch (error) {
         const statusCode = error?.response ? error?.response?.status : 500
         note.attempts.push({
             at: new Date(),
             statusCode: statusCode,
-            ok:statusCode === 200,
-            error:`${statusCode} response`
+            ok: statusCode === 200,
+            error: `${statusCode} response`
         })
         await note.save()
         throw error;
@@ -47,7 +47,7 @@ export const deliverNotes = async (job) => {
 export const handleFailedNotesDelivery = async (job, error) => {
     const { noteId } = job.data
     const note = await Note.findById(noteId)
-     if (!note) return
+    if (!note) return
     if (job.attemptsMade >= job.opts.attempts) {
         note.status = "dead"
         await note.save()

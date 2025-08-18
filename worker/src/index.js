@@ -29,7 +29,6 @@ const pollAndEnqueue = async () => {
             }
         })
     }
-    console.log("Ended Enqueing")
 }
 setInterval(pollAndEnqueue, POLL_INTERVAL)
 
