@@ -1,7 +1,7 @@
 
 # DropLater (Pinsaar Take-Home Assignment)
 
-## 🚀 How to Run
+## How to Run
 
 No installation steps needed. Just clone and run:
 
@@ -24,7 +24,7 @@ Services that will start:
 
 ---
 
-## 🔑 Authentication
+## Authentication
 
 All API requests require an **admin token**:
 
@@ -34,7 +34,7 @@ Authorization: Bearer PINSAAR
 
 ---
 
-## 🌐 API Endpoints
+## API Endpoints
 
 ### Health check
 
@@ -73,7 +73,7 @@ curl -X POST \
 
 ---
 
-## 📦 Admin UI
+## Admin UI
 
 Runs alongside the API on port 5173.
 It provides:
