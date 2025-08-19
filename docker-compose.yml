@@ -1,6 +1,15 @@
 version: "3.8"
 
 services:
+  react-admin:
+    build: ./react-admin
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+    environment:
+      - VITE_API_URL_BASE=http://api:3000
+      - VITE_ADMIN_TOKEN=PINSAAR
   api:
     build: ./api
     env_file: ./api/.env
