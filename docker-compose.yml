@@ -1,6 +1,6 @@
 services:
-  react-admin:
-    build: ./react-admin
+  admin:
+    build: ./admin
     ports:
       - "5173:5173"
     depends_on:
