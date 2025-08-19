@@ -1,6 +1,14 @@
 
 # DropLater (Pinsaar Take-Home Assignment)
 
+---
+
+## 🎥 Demo Video
+
+👉 [Watch the demo video here](https://drive.google.com/file/d/1QRZowrrAbxZpd0ebooYeguk29wBlqw_B/view?usp=drive_link)
+
+---
+
 ## How to Run
 
 No installation steps needed. Just clone and run:
