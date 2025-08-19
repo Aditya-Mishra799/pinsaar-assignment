@@ -23,7 +23,6 @@ const pollAndEnqueue = async () => {
     releaseAt: { $lte: now },
   });
   for (const note of pendingNotes) {
-    await noteQueue.remove(`${note._id}:${note.releaseAt.toISOString()}`);
     await noteQueue.add(
       "deliver",
       { noteId: note._id },

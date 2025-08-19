@@ -8,7 +8,7 @@ const getIdempotencyKey = (noteId, time) => {
 
 export const deliverNotes = async (job) => {
     const note = await Note.findById(job.data.noteId)
-    if (!note || !(note.status === "pending")) return;
+    if (!note || !(note.status === "pending" || note.status === "failed" )) return;
     try {
         const res = await axios.post(note.webhookUrl, note, {
             headers: {
@@ -41,6 +41,9 @@ export const deliverNotes = async (job) => {
             ok: false,
             error: errorDetail
         })
+        if (job.attemptsMade < job.opts.attempts) {
+            note.status = "failed";
+        }
         await note.save()
         throw error;
     }
@@ -53,5 +56,7 @@ export const handleFailedNotesDelivery = async (job, error) => {
     if (job.attemptsMade >= job.opts.attempts) {
         note.status = "dead"
         await note.save()
+        await job.remove();
+        console.log(`Job ${job.id} removed after max attempts.`);
     }
 }
