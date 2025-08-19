@@ -24,7 +24,6 @@ export const deliverNotes = async (job) => {
             at: new Date(),
             statusCode: res.status,
             ok: res.status === 200,
-            error: res.status === 200 ? null : `${res.status} response`
         })
         if (res.data.duplicate === false) {
             note.status = "delivered";
@@ -33,11 +32,14 @@ export const deliverNotes = async (job) => {
         await note.save()
     } catch (error) {
         const statusCode = error?.response ? error?.response?.status : 500
+        let errorDetail = error.message;
+        if (error.code === "ECONNABORTED") errorDetail = "Timeout";
+        if (error.response && error.response.data) errorDetail += ` | Sink: ${JSON.stringify(error.response.data)}`;
         note.attempts.push({
             at: new Date(),
             statusCode: statusCode,
-            ok: statusCode === 200,
-            error: `${statusCode} response`
+            ok: false,
+            error: errorDetail
         })
         await note.save()
         throw error;
