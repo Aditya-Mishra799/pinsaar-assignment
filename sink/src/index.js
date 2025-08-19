@@ -19,9 +19,7 @@ app.post("/sink", async (req, res) => {
         const isNewNote = await redis.setnx(key, 1)
         if (isNewNote) {
             await redis.expire(key, 60 * 60 * 24)
-            console.log("[SINK] Received new note:", {
-                body: req.body,
-            });
+            console.log("[SINK] Received new note:", req.body,);
             return res.status(200).json({ received: true, duplicate: false });
         }
         else {
