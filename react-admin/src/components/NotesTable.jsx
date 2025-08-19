@@ -1,6 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-
+import React, { useEffect, useState } from "react";
 const API_BASE = import.meta.env.VITE_API_URL_BASE || "http://localhost:3000";
 const ADMIN_TOKEN = import.meta.env.VITE_ADMIN_TOKEN;
 const validStatus = [
@@ -15,7 +13,6 @@ const NotesTable = ({ refreshSignal }) => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [filterStatus, setFilterStatus] =  useState("");
-  const prevStatuses = useRef({});
 
   const fetchNotes = async () => {
     setLoading(true);
@@ -27,12 +24,6 @@ const NotesTable = ({ refreshSignal }) => {
       });
       const data = await res.json();
       setNotes(data);
-      const newStatusMap = {};
-      data.forEach(note => {
-        newStatusMap[note._id] = note.status;
-      });
-      prevStatuses.current = newStatusMap;
-
     } catch (err) {
       console.error("Failed to fetch notes:", err);
     } finally {
@@ -75,10 +66,7 @@ const NotesTable = ({ refreshSignal }) => {
             </tr>
           </thead>
           <tbody>
-            <AnimatePresence>
               {notes.map(note => {
-                const prevStatus = prevStatuses.current[note._id];
-                const statusChanged = prevStatus && prevStatus !== note.status;
 
                 // Get last attempt statusCode or "-"
                 const lastAttempt = note.attempts.length > 0
@@ -86,12 +74,8 @@ const NotesTable = ({ refreshSignal }) => {
                   : null;
 
                 return (
-                  <motion.tr
+                  <tr
                     key={note._id}
-                    initial={{ backgroundColor: "transparent" }}
-                    animate={{ backgroundColor: statusChanged ? "#d4edda" : "transparent" }}
-                    transition={{ duration: 0.7 }}
-                    exit={{ opacity: 0 }}
                   >
                     <td style={{ padding: "0.5rem", borderBottom: "1px solid #eee", textAlign : "center" }}>{note._id}</td>
                     <td style={{ padding: "0.5rem", borderBottom: "1px solid #eee", textAlign : "center" }}>{note.title}</td>
@@ -105,10 +89,9 @@ const NotesTable = ({ refreshSignal }) => {
                         <button onClick={() => replayNote(note._id)}>Replay</button>
                       ): "None"}
                     </td>
-                  </motion.tr>
+                  </tr>
                 );
               })}
-            </AnimatePresence>
           </tbody>
         </table>
       )}
