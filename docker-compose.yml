@@ -1,6 +1,18 @@
 version: "3.8"
 
 services:
+  api:
+    build: ./api
+    env_file: ./api/.env
+    depends_on:
+      - redis
+      - mongo
+    ports:
+      - "3000:3000"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - MONGO_URI=mongodb://mongo:27017/droplater
+      
   sink:
     build: ./sink
     env_file: ./sink/.env
@@ -10,6 +22,7 @@ services:
       - "4000:4000"
     environment:
       - REDIS_URL=redis://redis:6379/0
+
       
   worker:
     build: ./worker
@@ -17,6 +30,7 @@ services:
     depends_on:
       - redis
       - mongo
+      - sink
     environment:
       - REDIS_URL=redis://redis:6379/0
       - MONGO_URI=mongodb://mongo:27017/droplater
